@@ -5,10 +5,10 @@ using TestTMCCommons.Model;
 
 namespace TestTMCCommons
 {
-    public class TestHelpers
+    public class TestEnumUtil
     {
         [Fact]
-        public void TestEnumExtender_Planets()
+        public void TestEnumUtil_GetAttributes_Planets()
         {
             double earthWeight = 72;
             double mass = earthWeight / Planet.EARTH.SurfaceGravity();

@@ -1,10 +1,16 @@
 ﻿using System;
-using PlanetExt = TMCCommons.EnumExtender<TestTMCCommons.Model.Planet, TestTMCCommons.Model.PlanetAttr>;
+using TMCCommons;
+
 namespace TestTMCCommons.Model
 {
     /// <summary>
-    /// Example to recreate planets example from java⁄
+    /// Example to recreate planets example from java:
     /// https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html
+    /// To extend an enum, we need 3 items:
+    /// - the enum
+    /// - the enum attributes class
+    /// - the enum extension static class
+    /// The attributes and extension classes become irrelevant to the user
     /// </summary>
     public enum Planet
     {
@@ -33,6 +39,9 @@ namespace TestTMCCommons.Model
         NEPTUNE
     }
 
+    /// <summary>
+    /// Attribute class for the Planet enum
+    /// </summary>
     class PlanetAttr : Attribute
     {
         public double Mass { get; set; }
@@ -59,7 +68,7 @@ namespace TestTMCCommons.Model
         /// <returns>The mass.</returns>
         public static double Mass(this Planet planet)
         {
-            return PlanetExt.GetAttributes(planet).Mass;
+            return GetAttributes(planet).Mass;
         }
 
         /// <summary>
@@ -68,7 +77,7 @@ namespace TestTMCCommons.Model
         /// <returns>The radius.</returns>
         public static double Radius(this Planet planet)
         {
-            return PlanetExt.GetAttributes(planet).Radius;
+            return GetAttributes(planet).Radius;
         }
 
         /// <summary>
@@ -77,9 +86,8 @@ namespace TestTMCCommons.Model
         /// <returns>The gravity.</returns>
         public static double SurfaceGravity(this Planet planet)
         {
-            double mass = Mass(planet);
-            double radius = Radius(planet);
-            return G * mass / (radius * radius);
+            var attr = GetAttributes(planet);
+            return G * attr.Mass / (attr.Radius * attr.Radius);
         }
 
         /// <summary>
@@ -90,6 +98,16 @@ namespace TestTMCCommons.Model
         public static double SurfaceWeight(this Planet planet, double otherMass)
         {
             return otherMass * SurfaceGravity(planet);
+        }
+
+        /// <summary>
+        /// Gets the attributes of the specified planet
+        /// </summary>
+        /// <returns>The attributes.</returns>
+        /// <param name="planet">Planet.</param>
+        static PlanetAttr GetAttributes(Planet planet)
+        {
+            return EnumUtil.GetAttributes<Planet, PlanetAttr>(planet);
         }
     }
 }
